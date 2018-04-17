@@ -112,17 +112,17 @@
 		6CF3609F2085CF16002585A8 /* BXLScrollViewController */ = {
 			isa = PBXGroup;
 			children = (
-				6CF360A02085CF16002585A8 /* BXLScrollMenuView.h */,
-				6CF360A12085CF16002585A8 /* BXLScrollMenuTitleCell.m */,
-				6CF360A22085CF16002585A8 /* BXLScrollContentView.h */,
-				6CF360A32085CF16002585A8 /* BXLScrollTheme.h */,
+				6CF360A92085CF16002585A8 /* BXLScrollViewController.h */,
 				6CF360A42085CF16002585A8 /* BXLScrollViewController.m */,
+				6CF360A02085CF16002585A8 /* BXLScrollMenuView.h */,
 				6CF360A52085CF16002585A8 /* BXLScrollMenuView.m */,
-				6CF360A62085CF16002585A8 /* BXLScrollViewProtocol.h */,
+				6CF360A22085CF16002585A8 /* BXLScrollContentView.h */,
 				6CF360A72085CF16002585A8 /* BXLScrollContentView.m */,
 				6CF360A82085CF16002585A8 /* BXLScrollMenuTitleCell.h */,
-				6CF360A92085CF16002585A8 /* BXLScrollViewController.h */,
+				6CF360A12085CF16002585A8 /* BXLScrollMenuTitleCell.m */,
+				6CF360A32085CF16002585A8 /* BXLScrollTheme.h */,
 				6CF360AA2085CF16002585A8 /* BXLScrollTheme.m */,
+				6CF360A62085CF16002585A8 /* BXLScrollViewProtocol.h */,
 			);
 			path = BXLScrollViewController;
 			sourceTree = "<group>";

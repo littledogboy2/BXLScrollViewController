@@ -33,10 +33,11 @@ static NSString * const kBXLScrollContentCellIdentifier = @"kBXLScrollContentCel
     self = [super initWithFrame:frame collectionViewLayout:flowLayout];
     if (self) {
         self.backgroundColor = [UIColor whiteColor];
-        self.scrollTheme = scrollTheme;
         self.delegate = self;
         self.dataSource = self;
         self.pagingEnabled = YES;
+        self.showsHorizontalScrollIndicator = NO;
+        self.scrollTheme = scrollTheme;
         self.lastSelectedIndex = 0;
         [self registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:kBXLScrollContentCellIdentifier];
     }
