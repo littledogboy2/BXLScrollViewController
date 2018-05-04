@@ -19,4 +19,6 @@
 @property (nonatomic, strong) NSArray<UIViewController *> *viewControllers;
 @property (nonatomic, strong) BXLScrollTheme *scrollTheme;
 
+- (void)registMenuCell:(Class)menuCellClass;
+
 @end

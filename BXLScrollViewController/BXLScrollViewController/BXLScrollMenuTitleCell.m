@@ -29,12 +29,11 @@
 - (void)setupSubviews {
     [self.contentView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.mas_equalTo(self);
-        make.height.mas_equalTo(13);
         make.right.mas_equalTo(self.titleLabel.mas_right);
     }];
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.height.mas_equalTo(self.contentView);
+        make.left.top.bottom.mas_equalTo(self.contentView);
     }];
 }
 

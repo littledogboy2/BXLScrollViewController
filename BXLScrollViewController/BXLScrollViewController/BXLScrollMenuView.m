@@ -11,6 +11,8 @@
 #import <Masonry.h>
 
 static NSString * const kTitleCellIdentifier = @"kTitleCellIdentifier";
+static NSString * const kRegisterCellIdentifier = @"kRegisterCellIdentifier_";
+
 
 @interface BXLScrollMenuView () <UICollectionViewDataSource, UICollectionViewDelegate>
 
@@ -19,7 +21,6 @@ static NSString * const kTitleCellIdentifier = @"kTitleCellIdentifier";
 @property (nonatomic, strong) NSIndexPath *lastSelectedIndexPath;
 @property (nonatomic, strong) NSIndexPath * selectedIndexPath;
 @property (nonatomic, strong) BXLScrollTheme *scrollTheme;
-@property (nonatomic, strong) NSMutableDictionary *cachedCellFrameDic; // 缓存 cell 在 collectionView 的 frame
 
 @property (nonatomic, assign) CGFloat prepareToScrollX;
 @property (nonatomic, assign) CGFloat destinationToScrollX;
@@ -27,6 +28,7 @@ static NSString * const kTitleCellIdentifier = @"kTitleCellIdentifier";
 @property (nonatomic, assign) CGFloat destinationScrollLineWidth;
 @property (nonatomic, assign) CGFloat prepareScrollLineCenterX;
 @property (nonatomic, assign) CGFloat destinationScrollLineCenterX;
+@property (nonatomic, assign) CGFloat latestContentSizeWidth;
 
 @property (nonatomic, assign) BOOL scrollAgainFlag;
 @property (nonatomic, assign) BOOL updateScrollLineCenterXFlag;
@@ -55,7 +57,6 @@ static NSString * const kTitleCellIdentifier = @"kTitleCellIdentifier";
         self.backgroundView.backgroundColor = scrollTheme.menuViewBGColor;
         [self registerClass:[BXLScrollMenuTitleCell class] forCellWithReuseIdentifier:kTitleCellIdentifier];
         self.scrollTheme = scrollTheme;
-        self.cachedCellFrameDic = [NSMutableDictionary dictionary];
         self.selectedIndexPath = [NSIndexPath indexPathForItem:0 inSection:0];
         self.lastSelectedIndexPath = self.selectedIndexPath;
         self.scrollAgainFlag = NO;
@@ -132,10 +133,6 @@ static NSString * const kTitleCellIdentifier = @"kTitleCellIdentifier";
 
 - (CGRect)cellFrameOfIndexPath:(NSIndexPath *)indexPath {
     UICollectionViewCell * cell = [self collectionView:self cellForItemAtIndexPath:indexPath];
-    if (cell == nil) {
-        CGRect cellFrame = [[self.cachedCellFrameDic objectForKey:indexPath] CGRectValue];
-        return cellFrame;
-    }
     CGRect cellFrame = [self convertRect:cell.frame toView:self];
     return cellFrame;
 }
@@ -149,30 +146,6 @@ static NSString * const kTitleCellIdentifier = @"kTitleCellIdentifier";
                                  );
     return center;
 }
-
-#pragma mark - <UICollectionViewDataSource>
-
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return self.menuTitles.count;
-}
-
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    BXLScrollMenuTitleCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kTitleCellIdentifier forIndexPath:indexPath];
-    cell.theme = self.scrollTheme;
-    cell.titleLabel.text = self.menuTitles[indexPath.item];
-    [cell setNeedsLayout];
-    [cell layoutIfNeeded];
-    if (indexPath.item == self.selectedIndexPath.item) { // 默认选中 cell
-        cell.choosed = YES;
-    }
-    
-    // 缓存frame
-    CGRect frame = [collectionView convertRect:cell.frame toView:collectionView];
-    [self.cachedCellFrameDic setObject:[NSValue valueWithCGRect:frame] forKey:indexPath];
-    return cell;
-}
-
-#pragma mark - <UICollectionViewDelegate>
 
 - (CGFloat)scrollToXOfSelectedIndexPath:(NSIndexPath *)indexPath {
     CGPoint cellCenter = [self cellCenterOfIndexPath:indexPath];
@@ -197,6 +170,25 @@ static NSString * const kTitleCellIdentifier = @"kTitleCellIdentifier";
     }
 }
 
+#pragma mark - <UICollectionViewDataSource>
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    return self.menuTitles.count;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *cellIdentifier = self.registCellIdentifier.length > 0 ? self.registCellIdentifier : kTitleCellIdentifier;
+    BXLScrollMenuTitleCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
+    cell.theme = self.scrollTheme;
+    cell.titleLabel.text = self.menuTitles[indexPath.item];
+    if (indexPath.item == self.selectedIndexPath.item) { // 默认选中 cell
+        cell.choosed = YES;
+    }
+
+    return cell;
+}
+
+#pragma mark - <UICollectionViewDelegate>
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     self.selectedIndexPath = indexPath;
     [self collectionView:collectionView scrollToXOfSelectedIndexPath:indexPath];
@@ -215,25 +207,45 @@ static NSString * const kTitleCellIdentifier = @"kTitleCellIdentifier";
     self.destinationScrollLineCenterX = [self scrollLineCenterXOfIndexPath:self.selectedIndexPath];
     self.destinationScrollLineWidth = [self scrollLineWidthOfIndexPath:self.selectedIndexPath];
     
-    if (self.destinationToScrollX != self.prepareToScrollX && self.scrollAgainFlag == NO) {
+    BOOL isContentSizeChange = self.latestContentSizeWidth != scrollView.contentSize.width;
+    
+    BOOL isScrollXChange = self.destinationToScrollX != self.prepareToScrollX && self.scrollAgainFlag == NO;
+    if (isScrollXChange || isContentSizeChange) {
         self.scrollAgainFlag = YES;
+        self.prepareToScrollX = self.destinationToScrollX;
+        
         if (self.destinationToScrollX >= scrollView.contentSize.width - scrollView.bounds.size.width) {
             [scrollView setContentOffset:CGPointMake(scrollView.contentSize.width - scrollView.bounds.size.width, 0) animated:YES];
+        } else if (self.destinationToScrollX < 0) {
+            // just do nothing
         } else {
             [scrollView setContentOffset:CGPointMake(self.destinationToScrollX, 0) animated:YES];
         }
     }
-    if (self.destinationScrollLineCenterX != self.prepareScrollLineCenterX && self.updateScrollLineCenterXFlag == NO) {
+    
+    BOOL isLineCenterXChange = self.destinationScrollLineCenterX != self.prepareScrollLineCenterX && self.updateScrollLineCenterXFlag == NO;
+    if (isLineCenterXChange || isContentSizeChange) {
+        self.updateScrollLineCenterXFlag = YES;
+        self.prepareScrollLineCenterX = self.destinationToScrollX;
+        
         [self.scrollLine mas_updateConstraints:^(MASConstraintMaker *make) {
             make.centerX.mas_equalTo(self.mas_left).offset(self.destinationScrollLineCenterX);
         }];
     }
-    if (self.destinationScrollLineWidth != self.prepareScrollLineWidth && self.updateScrollLineWidthFlag == NO) {
+    
+    BOOL isLineWidthChange = self.destinationScrollLineWidth != self.prepareScrollLineWidth && self.updateScrollLineWidthFlag == NO;
+    if (isLineWidthChange || isContentSizeChange) {
+        self.updateScrollLineWidthFlag = YES;
+        self.prepareScrollLineWidth = self.destinationScrollLineWidth;
+        // Update latestContentSizeWidth after ScrollX, LineCenterX,
+        // ScrollLineWidth have updated.
+        self.latestContentSizeWidth = scrollView.contentSize.width;
+        
         [self.scrollLine mas_updateConstraints:^(MASConstraintMaker *make) {
             make.width.mas_offset(self.destinationScrollLineWidth);
         }];
     }
-   
+    
     if (scrollView.contentOffset.x == self.destinationToScrollX) {
         self.scrollAgainFlag = NO;
         self.updateScrollLineCenterXFlag = NO;
@@ -260,6 +272,7 @@ static NSString * const kTitleCellIdentifier = @"kTitleCellIdentifier";
 - (void)setMenuTitles:(NSArray<NSString *> *)menuTitles {
     _menuTitles = [menuTitles copy];
     [self reloadData];
+    [self collectionView:self scrollToXOfSelectedIndexPath:self.selectedIndexPath];
 }
 
 #pragma mark - Lazy Load

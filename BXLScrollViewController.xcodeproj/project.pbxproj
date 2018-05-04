@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6C8D3FFB209C55AD007F4A04 /* MyScrollMemuTitleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C8D3FFA209C55AD007F4A04 /* MyScrollMemuTitleCell.m */; };
 		6CF3608B2085CBCF002585A8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CF3608A2085CBCE002585A8 /* AppDelegate.m */; };
 		6CF3608E2085CBCF002585A8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CF3608D2085CBCF002585A8 /* ViewController.m */; };
 		6CF360912085CBCF002585A8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6CF3608F2085CBCF002585A8 /* Main.storyboard */; };
@@ -25,6 +26,8 @@
 /* Begin PBXFileReference section */
 		57623959D708308F77721E57 /* libPods-BXLScrollViewController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BXLScrollViewController.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6579EE9A30CB12FE64282D5A /* Pods-BXLScrollViewController.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BXLScrollViewController.release.xcconfig"; path = "Pods/Target Support Files/Pods-BXLScrollViewController/Pods-BXLScrollViewController.release.xcconfig"; sourceTree = "<group>"; };
+		6C8D3FF9209C55AD007F4A04 /* MyScrollMemuTitleCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyScrollMemuTitleCell.h; sourceTree = "<group>"; };
+		6C8D3FFA209C55AD007F4A04 /* MyScrollMemuTitleCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyScrollMemuTitleCell.m; sourceTree = "<group>"; };
 		6CF360862085CBCE002585A8 /* BXLScrollViewController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BXLScrollViewController.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6CF360892085CBCE002585A8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		6CF3608A2085CBCE002585A8 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -100,6 +103,8 @@
 				6CF3608D2085CBCF002585A8 /* ViewController.m */,
 				6CF360B12085CF53002585A8 /* FanScrollTheme.h */,
 				6CF360B02085CF53002585A8 /* FanScrollTheme.m */,
+				6C8D3FF9209C55AD007F4A04 /* MyScrollMemuTitleCell.h */,
+				6C8D3FFA209C55AD007F4A04 /* MyScrollMemuTitleCell.m */,
 				6CF3608F2085CBCF002585A8 /* Main.storyboard */,
 				6CF360922085CBD0002585A8 /* Assets.xcassets */,
 				6CF360942085CBD0002585A8 /* LaunchScreen.storyboard */,
@@ -268,6 +273,7 @@
 				6CF360AD2085CF16002585A8 /* BXLScrollMenuView.m in Sources */,
 				6CF360AB2085CF16002585A8 /* BXLScrollMenuTitleCell.m in Sources */,
 				6CF360AC2085CF16002585A8 /* BXLScrollViewController.m in Sources */,
+				6C8D3FFB209C55AD007F4A04 /* MyScrollMemuTitleCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,10 +9,15 @@
 #import "BXLScrollViewController.h"
 #import <Masonry.h>
 
+static NSString * const kRegisterCellIdentifier = @"kRegisterCellIdentifier_";
+
+
 @interface BXLScrollViewController ()
 
 @property (nonatomic, strong, readwrite) BXLScrollMenuView *menuView;
 @property (nonatomic, strong, readwrite) BXLScrollContentView *contentView;
+@property (nonatomic, strong) NSMutableDictionary *registMenuCellDic;
+
 
 @end
 
@@ -20,6 +25,13 @@
 
 #pragma mark - Lifecycle
 
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.registMenuCellDic = [NSMutableDictionary dictionary];
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -44,9 +56,18 @@
     }];
 }
 
+- (void)registMenuCell:(Class)menuCellClass {
+    NSString *cellIdentifier = [kRegisterCellIdentifier stringByAppendingString:NSStringFromClass(menuCellClass)];
+    [self.registMenuCellDic setObject:menuCellClass forKey:cellIdentifier];
+}
+
 - (void)loadData {
     self.menuView.menuTitles = self.menuTitles;
     self.contentView.viewControllers = self.viewControllers;
+    for (NSString *key in self.registMenuCellDic) {
+        self.menuView.registCellIdentifier = key;
+        [self.menuView registerClass:self.registMenuCellDic[key] forCellWithReuseIdentifier:key];
+    }
 }
 
 #pragma mark - Lazy Load

@@ -16,6 +16,7 @@
 @property (nonatomic, strong, readonly) UIView *bottomLine;
 @property (nonatomic, weak) id <BXLScrollMenuViewDelegate> scrollDelegate;
 @property (nonatomic, strong) NSArray<NSString *> *menuTitles;
+@property (nonatomic, strong) NSString *registCellIdentifier;
 
 - (instancetype)initWithFrame:(CGRect)frame
                   scrollTheme:(BXLScrollTheme *)scrollTheme;

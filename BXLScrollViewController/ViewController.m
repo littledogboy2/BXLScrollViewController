@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "BXLScrollViewController.h"
 #import "FanScrollTheme.h"
+#import "MyScrollMemuTitleCell.h"
 #import <Masonry.h>
 
 @interface ViewController ()
@@ -46,6 +47,7 @@
     scrollVC.scrollTheme = theme;
     scrollVC.menuTitles = titles;
     scrollVC.viewControllers = vcs;
+    [scrollVC registMenuCell:[MyScrollMemuTitleCell class]];
     [self.view addSubview:scrollVC.view];
     [self addChildViewController:scrollVC];
     
